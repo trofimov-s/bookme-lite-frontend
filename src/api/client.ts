@@ -34,8 +34,6 @@ apiClient.interceptors.response.use(
       if (error.response?.status) {
         statusCode = error.response.status;
       }
-
-      return Promise.reject(new TypedApiError(messages, statusCode, error));
     }
 
     return Promise.reject(new TypedApiError(messages, statusCode, error));

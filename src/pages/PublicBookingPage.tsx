@@ -1,5 +1,9 @@
+import { useParams } from 'react-router';
+
 function PublicBookingPage() {
-  return <div>Public Booking Page</div>;
+  const { slug } = useParams<{ slug: string | undefined }>();
+
+  return <div>Public Booking Page: {slug}</div>;
 }
 
 export default PublicBookingPage;
