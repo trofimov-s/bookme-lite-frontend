@@ -264,7 +264,33 @@ export interface components {
       /** @description An array of weekdays */
       items: components['schemas']['ScheduleDayRequestDto'][];
     };
-    SlotResponseDto: Record<string, never>;
+    SlotItemResponseDto: {
+      /**
+       * @description Slot start time
+       * @example 540
+       */
+      startTime: number;
+      /**
+       * @description Slot end time
+       * @example 570
+       */
+      endTime: number;
+      /**
+       * @description Is slot available
+       * @example true
+       */
+      isLocked: boolean;
+    };
+    SlotResponseDto: {
+      /**
+       * Format: date
+       * @description Selected date
+       * @example 2026-09-08
+       */
+      date: string;
+      /** @description An array of slots */
+      slots: components['schemas']['SlotItemResponseDto'][];
+    };
     CreateBookingRequestDto: {
       /** @example johndoe */
       slug: string;
@@ -377,6 +403,7 @@ export type LoginRequestDto = components['schemas']['LoginRequestDto'];
 export type ScheduleResponseDto = components['schemas']['ScheduleResponseDto'];
 export type ScheduleDayRequestDto = components['schemas']['ScheduleDayRequestDto'];
 export type ScheduleBatchRequestDto = components['schemas']['ScheduleBatchRequestDto'];
+export type SlotItemResponseDto = components['schemas']['SlotItemResponseDto'];
 export type SlotResponseDto = components['schemas']['SlotResponseDto'];
 export type CreateBookingRequestDto = components['schemas']['CreateBookingRequestDto'];
 export type CreateBookingResponseDto = components['schemas']['CreateBookingResponseDto'];

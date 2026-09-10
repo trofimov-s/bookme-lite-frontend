@@ -1,9 +1,12 @@
-import { useParams } from 'react-router';
+import Booking from '@/features/booking/components/Booking';
 
 function PublicBookingPage() {
-  const { slug } = useParams<{ slug: string | undefined }>();
-
-  return <div>Public Booking Page: {slug}</div>;
+  return (
+    <div>
+      <h2>Create appointmet</h2>
+      <Booking />
+    </div>
+  );
 }
 
 export default PublicBookingPage;

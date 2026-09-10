@@ -1,20 +1,21 @@
+import { cn } from 'cn';
+
 type ErrorMessageProps = {
   messages: string[];
+  classNames: string;
 };
 
-function ErrorMessage({ messages }: ErrorMessageProps) {
+function ErrorMessage({ messages, classNames }: ErrorMessageProps) {
   if (messages.length === 0) {
     return null;
   }
 
-  if (messages.length === 1) {
-    return <span>{messages[0]}</span>;
-  }
-
   return (
-    <ul>
+    <ul className={cn('flex flex-col gap-y-0.5', classNames)}>
       {messages.map((message) => (
-        <li key={message}>{message}</li>
+        <li className="text-sm text-destructive" key={message}>
+          {message}
+        </li>
       ))}
     </ul>
   );

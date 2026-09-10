@@ -39,6 +39,7 @@ export default defineConfig([
         },
       ],
       'simple-import-sort/exports': 'error',
+      'no-console': ['error', { allow: ['warn', 'error'] }],
     },
   },
 ]);

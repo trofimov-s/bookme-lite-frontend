@@ -1,12 +1,25 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
-import { useForm } from 'react-hook-form';
-import { Link, useNavigate } from 'react-router';
+import { Loader2 } from 'lucide-react';
+import { Controller, useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router';
 
 import { LOGIN_API } from '../api';
 import { type LoginFormValues, loginSchema } from '../schema';
 
 import type { AuthResponseDto } from '@/api/schema';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
+import { Input } from '@/components/ui/input';
 import ErrorMessage from '@/shared/components/ErrorMessage';
 import { useAuthStore } from '@/shared/store/auth.store';
 import type { TypedApiError } from '@/types/api-error';
@@ -14,12 +27,9 @@ import type { TypedApiError } from '@/types/api-error';
 function Login() {
   const { setAccessToken } = useAuthStore();
   const navigate = useNavigate();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<LoginFormValues>({
+  const { handleSubmit, control } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
+    defaultValues: { email: '', password: '' },
   });
 
   const { mutate, isPending, error } = useMutation<AuthResponseDto, TypedApiError, LoginFormValues>({
@@ -35,23 +45,62 @@ function Login() {
   };
 
   return (
-    <>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <input {...register('email')} type="email" placeholder="Email" />
-        {errors.email && <span>{errors.email.message}</span>}
+    <div className="flex min-h-screen items-center justify-center p-4">
+      <Card className="w-full max-w-sm">
+        <CardHeader>
+          <CardTitle>Login to your account</CardTitle>
+          <CardDescription>Enter your email below to login to your account</CardDescription>
+          <CardAction>
+            <Button variant="link" onClick={() => navigate('/signup')}>
+              Sign up
+            </Button>
+          </CardAction>
+        </CardHeader>
+        <CardContent>
+          <form id="login-form">
+            <FieldGroup>
+              <Controller
+                name="email"
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Field>
+                    <FieldLabel htmlFor={field.name}>Email</FieldLabel>
+                    <Input {...field} id={field.name} placeholder="m@example.com" />
+                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                  </Field>
+                )}
+              />
 
-        <input {...register('password')} type="password" placeholder="Password" />
-        {errors.password && <span>{errors.password.message}</span>}
+              <Controller
+                name="password"
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Field>
+                    <FieldLabel htmlFor={field.name}>Password</FieldLabel>
+                    <Input {...field} id={field.name} type="password" placeholder="Enter password" />
+                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                  </Field>
+                )}
+              />
+            </FieldGroup>
 
-        <button type="submit" disabled={isPending}>
-          {isPending ? 'Entering...' : 'Login'}
-        </button>
+            {error && <ErrorMessage classNames="mt-5" messages={error.messages} />}
+          </form>
+        </CardContent>
 
-        {error && <ErrorMessage messages={error.messages} />}
-      </form>
-
-      <Link to="/signup">Sign up</Link>
-    </>
+        <CardFooter>
+          <Button
+            onClick={handleSubmit(onSubmit)}
+            form="login-form"
+            className="w-full"
+            type="submit"
+            disabled={isPending}
+          >
+            {isPending ? <Loader2 className="animate-spin" /> : 'Login'}
+          </Button>
+        </CardFooter>
+      </Card>
+    </div>
   );
 }
 
