@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
-import { Loader2 } from 'lucide-react';
+import { Loader2, MoveRightIcon } from 'lucide-react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 
@@ -49,52 +49,60 @@ function Login() {
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle>Login to your account</CardTitle>
+
           <CardDescription>Enter your email below to login to your account</CardDescription>
+
           <CardAction>
-            <Button variant="link" onClick={() => navigate('/signup')}>
+            <Button variant="ghost" onClick={() => navigate('/signup')}>
               Sign up
+              <MoveRightIcon area-icon="inline-end" />
             </Button>
           </CardAction>
         </CardHeader>
+
         <CardContent>
           <form id="login-form">
             <FieldGroup>
               <Controller
-                name="email"
                 control={control}
+                name="email"
                 render={({ field, fieldState }) => (
                   <Field>
-                    <FieldLabel htmlFor={field.name}>Email</FieldLabel>
-                    <Input {...field} id={field.name} placeholder="m@example.com" />
+                    <FieldLabel required htmlFor={field.name}>
+                      Email
+                    </FieldLabel>
+                    <Input {...field} required id={field.name} />
                     {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                   </Field>
                 )}
               />
 
               <Controller
-                name="password"
                 control={control}
+                name="password"
                 render={({ field, fieldState }) => (
                   <Field>
-                    <FieldLabel htmlFor={field.name}>Password</FieldLabel>
-                    <Input {...field} id={field.name} type="password" placeholder="Enter password" />
+                    <FieldLabel required htmlFor={field.name}>
+                      Password
+                    </FieldLabel>
+                    <Input {...field} required id={field.name} placeholder="Enter password" type="password" />
                     {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                   </Field>
                 )}
               />
             </FieldGroup>
 
-            {error && <ErrorMessage classNames="mt-5" messages={error.messages} />}
+            {error && <ErrorMessage classes="mt-5" messages={error.messages} />}
           </form>
         </CardContent>
 
         <CardFooter>
           <Button
-            onClick={handleSubmit(onSubmit)}
-            form="login-form"
             className="w-full"
-            type="submit"
             disabled={isPending}
+            form="login-form"
+            type="submit"
+            onClick={handleSubmit(onSubmit)}
           >
             {isPending ? <Loader2 className="animate-spin" /> : 'Login'}
           </Button>

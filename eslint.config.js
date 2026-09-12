@@ -6,6 +6,7 @@ import tseslint from 'typescript-eslint';
 import { defineConfig, globalIgnores } from 'eslint/config';
 import prettierRecommended from 'eslint-plugin-prettier/recommended';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
+import react from 'eslint-plugin-react';
 
 export default defineConfig([
   globalIgnores(['dist']),
@@ -22,6 +23,7 @@ export default defineConfig([
       globals: globals.browser,
     },
     plugins: {
+      react,
       'simple-import-sort': simpleImportSort,
     },
     rules: {
@@ -40,6 +42,15 @@ export default defineConfig([
       ],
       'simple-import-sort/exports': 'error',
       'no-console': ['error', { allow: ['warn', 'error'] }],
+      'react/jsx-sort-props': [
+        'error',
+        {
+          callbacksLast: true,
+          shorthandFirst: true,
+          multiline: 'last',
+          ignoreCase: true,
+        },
+      ],
     },
   },
 ]);

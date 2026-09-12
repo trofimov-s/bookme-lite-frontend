@@ -76,7 +76,7 @@ function ScheduleForm({ schedule }: ScheduleFormProps) {
       <form onSubmit={handleSubmit(onSubmit)}>
         <ul>
           {fields.map(({ id, weekday }, index) => (
-            <ScheduleFormItem key={id} weekday={weekday} index={index} register={register} control={control} />
+            <ScheduleFormItem control={control} index={index} key={id} register={register} weekday={weekday} />
           ))}
         </ul>
 

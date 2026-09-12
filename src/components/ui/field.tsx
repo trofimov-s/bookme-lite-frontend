@@ -25,9 +25,9 @@ function FieldLegend({
 }: React.ComponentProps<'legend'> & { variant?: 'legend' | 'label' }) {
   return (
     <legend
+      className={cn('mb-1.5 font-medium data-[variant=label]:text-sm data-[variant=legend]:text-base', className)}
       data-slot="field-legend"
       data-variant={variant}
-      className={cn('mb-1.5 font-medium data-[variant=label]:text-sm data-[variant=legend]:text-base', className)}
       {...props}
     />
   );
@@ -68,10 +68,10 @@ function Field({
 }: React.ComponentProps<'div'> & VariantProps<typeof fieldVariants>) {
   return (
     <div
-      role="group"
-      data-slot="field"
-      data-orientation={orientation}
       className={cn(fieldVariants({ orientation }), className)}
+      data-orientation={orientation}
+      data-slot="field"
+      role="group"
       {...props}
     />
   );
@@ -80,20 +80,21 @@ function Field({
 function FieldContent({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
-      data-slot="field-content"
       className={cn('group/field-content flex flex-1 flex-col gap-0.5 leading-snug', className)}
+      data-slot="field-content"
       {...props}
     />
   );
 }
 
-function FieldLabel({ className, ...props }: React.ComponentProps<typeof Label>) {
+function FieldLabel({ className, required, ...props }: React.ComponentProps<typeof Label> & { required?: boolean }) {
   return (
     <Label
       data-slot="field-label"
       className={cn(
         'group/field-label peer/field-label flex w-fit gap-2 leading-snug group-data-[disabled=true]/field:opacity-50 has-data-checked:border-primary/30 has-data-checked:bg-primary/5 has-[>[data-slot=field]]:rounded-lg has-[>[data-slot=field]]:border has-[>[data-slot=field]]:not-has-[:disabled,[data-disabled]]:hover:bg-muted/50 has-[>[data-slot=field]]:has-[:focus-visible]:border-ring has-[>[data-slot=field]]:has-[:focus-visible]:ring-3 has-[>[data-slot=field]]:has-[:focus-visible]:ring-ring/50 *:data-[slot=field]:p-2.5 dark:has-data-checked:border-primary/20 dark:has-data-checked:bg-primary/10',
         'has-[>[data-slot=field]]:w-full has-[>[data-slot=field]]:flex-col',
+        required && 'after:-ml-1 after:text-destructive after:content-["*"]',
         className,
       )}
       {...props}
@@ -138,9 +139,9 @@ function FieldSeparator({
 }) {
   return (
     <div
-      data-slot="field-separator"
-      data-content={!!children}
       className={cn('relative -my-2 h-5 text-sm group-data-[variant=outline]/field-group:-mb-2', className)}
+      data-content={!!children}
+      data-slot="field-separator"
       {...props}
     >
       <Separator className="absolute inset-0 top-1/2" />
@@ -192,9 +193,9 @@ function FieldError({
 
   return (
     <div
-      role="alert"
-      data-slot="field-error"
       className={cn('text-sm font-normal text-destructive', className)}
+      data-slot="field-error"
+      role="alert"
       {...props}
     >
       {content}

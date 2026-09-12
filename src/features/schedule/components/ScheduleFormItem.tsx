@@ -23,17 +23,17 @@ function ScheduleFormItem({ index, weekday, register, control }: ScheduleFormIte
 
       <label htmlFor="isActive">
         <span>Is Workday?</span>
-        <input {...register(`days.${index}.isActive`)} type="checkbox" id="isActive" />
+        <input {...register(`days.${index}.isActive`)} id="isActive" type="checkbox" />
       </label>
 
       <label htmlFor="startTime">
         <span>Start Time</span>
-        <input {...register(`days.${index}.startTime`)} type="time" id="startTime" disabled={!isActive} />
+        <input {...register(`days.${index}.startTime`)} disabled={!isActive} id="startTime" type="time" />
       </label>
 
       <label htmlFor="endTime">
         <span>End Time</span>
-        <input {...register(`days.${index}.endTime`)} type="time" id="endTime" disabled={!isActive} />
+        <input {...register(`days.${index}.endTime`)} disabled={!isActive} id="endTime" type="time" />
       </label>
     </li>
   );

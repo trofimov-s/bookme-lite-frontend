@@ -1,12 +1,25 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
-import { useForm } from 'react-hook-form';
-import { Link, useNavigate } from 'react-router';
+import { Loader2, MoveRightIcon } from 'lucide-react';
+import { Controller, useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router';
 
 import { SIGN_UP_API } from '../api';
 import { type SignUpFormValues, signUpSchema } from '../schema';
 
 import type { AuthResponseDto } from '@/api/schema';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
+import { Input } from '@/components/ui/input';
 import ErrorMessage from '@/shared/components/ErrorMessage';
 import { useAuthStore } from '@/shared/store/auth.store';
 import type { TypedApiError } from '@/types/api-error';
@@ -14,12 +27,9 @@ import type { TypedApiError } from '@/types/api-error';
 function SignUp() {
   const navigate = useNavigate();
   const { setAccessToken } = useAuthStore();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<SignUpFormValues>({
+  const { control, handleSubmit } = useForm<SignUpFormValues>({
     resolver: zodResolver(signUpSchema),
+    defaultValues: { email: '', password: '', name: '', slug: '' },
   });
   const { mutate, isPending, error } = useMutation<AuthResponseDto, TypedApiError, SignUpFormValues>({
     mutationFn: SIGN_UP_API.signup,
@@ -34,29 +44,96 @@ function SignUp() {
   };
 
   return (
-    <>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <input {...register('email')} type="email" placeholder="Email" />
-        {errors.email && <span>{errors.email.message}</span>}
+    <div className="flex min-h-screen items-center justify-center p-4">
+      <Card className="w-full max-w-sm">
+        <CardHeader>
+          <CardTitle>Sign Up</CardTitle>
 
-        <input {...register('password')} type="password" placeholder="Password" />
-        {errors.password && <span>{errors.password.message}</span>}
+          <CardDescription>Create an account</CardDescription>
 
-        <input {...register('name')} placeholder="Name" />
-        {errors.name && <span>{errors.name.message}</span>}
+          <CardAction>
+            <Button variant="ghost" onClick={() => navigate('/login')}>
+              Login
+              <MoveRightIcon data-icon="inline-end" />
+            </Button>
+          </CardAction>
+        </CardHeader>
 
-        <input {...register('slug')} placeholder="Slug" />
-        {errors.slug && <span>{errors.slug.message}</span>}
+        <CardContent>
+          <form id="signup-form">
+            <FieldGroup>
+              <Controller
+                control={control}
+                name="email"
+                render={({ field, fieldState }) => (
+                  <Field>
+                    <FieldLabel required htmlFor={field.name}>
+                      Email
+                    </FieldLabel>
+                    <Input {...field} required id={field.name} placeholder="m@example.com" />
+                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                  </Field>
+                )}
+              />
 
-        <button type="submit" disabled={isPending}>
-          {isPending ? 'Entering...' : 'Sign Up'}
-        </button>
+              <Controller
+                control={control}
+                name="password"
+                render={({ field, fieldState }) => (
+                  <Field>
+                    <FieldLabel required htmlFor={field.name}>
+                      Password
+                    </FieldLabel>
+                    <Input {...field} required id={field.name} type="password" />
+                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                  </Field>
+                )}
+              />
 
-        {error && <ErrorMessage messages={error.messages} />}
-      </form>
+              <Controller
+                control={control}
+                name="name"
+                render={({ field, fieldState }) => (
+                  <Field>
+                    <FieldLabel required htmlFor={field.name}>
+                      Name
+                    </FieldLabel>
+                    <Input {...field} required id={field.name} placeholder="Enter your name" />
+                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                  </Field>
+                )}
+              />
 
-      <Link to="/login">Login</Link>
-    </>
+              <Controller
+                control={control}
+                name="slug"
+                render={({ field, fieldState }) => (
+                  <Field>
+                    <FieldLabel htmlFor={field.name}>Slug</FieldLabel>
+                    <Input {...field} id={field.name} placeholder="Enter a slug" />
+                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                  </Field>
+                )}
+              />
+            </FieldGroup>
+
+            {error && <ErrorMessage classes="mt-5" messages={error.messages} />}
+          </form>
+        </CardContent>
+
+        <CardFooter>
+          <Button
+            className="w-full"
+            disabled={isPending}
+            form="signup-form"
+            type="submit"
+            onClick={handleSubmit(onSubmit)}
+          >
+            {isPending ? <Loader2 className="animate-spin" /> : 'Sign Up'}
+          </Button>
+        </CardFooter>
+      </Card>
+    </div>
   );
 }
 

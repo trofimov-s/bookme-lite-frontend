@@ -32,7 +32,7 @@ function BookingsList() {
   return (
     <ul>
       {bookings.map((item) => (
-        <BookingItem key={item.id} booking={item} />
+        <BookingItem booking={item} key={item.id} />
       ))}
     </ul>
   );
